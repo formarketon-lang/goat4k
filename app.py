@@ -247,63 +247,54 @@ with col2:
 # 2. RULES TAB
 # ==========================================================
 with tab2:
-    st.subheader("Step 2 · Technical Rules & Preset Engine")
+import streamlit as st
+
+# --- Premium Custom Styling ---
+st.markdown("""
+<style>
+    /* Premium Card / Container Style */
+    .indicator-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        padding: 16px 20px;
+        margin-bottom: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        transition: all 0.3s ease;
+    }
+    .indicator-card:hover {
+        border-color: rgba(0, 210, 255, 0.4);
+        box-shadow: 0 6px 20px rgba(0, 210, 255, 0.1);
+    }
     
-    pcol1, pcol2, pcol3 = st.columns([2, 1, 1])
-    with pcol1:
-        preset_choice = st.radio("Strategy Presets", ["Trend Follower", "Breakout", "Pullback", "Reversal", "Custom"], horizontal=True)
-    with pcol2:
-        rule_logic = st.selectbox("Rule Logic", ["AND (All enabled)", "OR (Any enabled)", "Min-N-of-M"], index=2)
-    with pcol3:
-        min_n = st.number_input("N (for Min-N-of-M)", value=3, min_value=1, max_value=10)
-        trade_dir = st.selectbox("Direction", ["BOTH (Buy & Sell)", "BUY Only", "SELL Only"])
+    /* Header Badge Style */
+    .badge-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #e0e6ed;
+        margin-bottom: 8px;
+    }
+    .badge-icon {
+        background: rgba(0, 210, 255, 0.15);
+        color: #00d2ff;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+    }
 
-    st.markdown("---")
-    rcol1, rcol2 = st.columns(2)
-    
-    # প্রিসেট অনুযায়ী ডিফল্ট ভ্যালু নির্ধারণ
-    def_ema = preset_choice in ["Trend Follower", "Custom"]
-    def_e200 = preset_choice in ["Trend Follower", "Pullback", "Custom"]
-    def_rsi = preset_choice in ["Pullback", "Reversal", "Custom"]
-    def_macd = preset_choice in ["Trend Follower", "Reversal", "Custom"]
-    def_st = preset_choice in ["Trend Follower", "Pullback", "Custom"]
-    def_vol = preset_choice in ["Breakout", "Reversal", "Custom"]
-    def_brk = preset_choice in ["Breakout", "Custom"]
-    def_sq = preset_choice in ["Breakout", "Custom"]
-    def_adx = preset_choice in ["Trend Follower", "Breakout", "Custom"]
+    /* Inactive State Visual Dimming */
+    .disabled-block {
+        opacity: 0.4;
+        filter: grayscale(80%);
+        pointer-events: none;
+    }
+</style>
+""", unsafe_allow_html=True)
 
-    with rcol1:
-        with st.expander("EMA Crossover & 200 EMA", expanded=True):
-            r_ema = st.checkbox("Enable EMA Crossover", value=def_ema)
-            ema_fast = st.number_input("Fast EMA Period", value=9, min_value=2)
-            ema_slow = st.number_input("Slow EMA Period", value=21, min_value=3)
-            r_e200 = st.checkbox("Close vs EMA 200 (Bullish > EMA200)", value=def_e200)
-
-        with st.expander("RSI & MACD Indicators", expanded=True):
-            r_rsi = st.checkbox("Enable RSI Zone", value=def_rsi)
-            rsi_lo = st.slider("RSI Lower Bound (Bullish)", 0, 100, 50 if preset_choice != "Pullback" else 35)
-            rsi_hi = st.slider("RSI Upper Bound (Bullish)", 0, 100, 70 if preset_choice != "Pullback" else 55)
-            r_macd = st.checkbox("Enable MACD Crossover", value=def_macd)
-
-        with st.expander("Supertrend & VWAP", expanded=True):
-            r_st = st.checkbox("Enable Supertrend (10, 3)", value=def_st)
-            r_vwap = st.checkbox("Session VWAP (Intraday)", value=False)
-
-    with rcol2:
-        with st.expander("ADX Trend Strength & Volume Spike", expanded=True):
-            r_adx = st.checkbox("Enable ADX Threshold", value=def_adx)
-            adx_th = st.slider("Min ADX Value", 10, 50, 20)
-            adx_di = st.checkbox("Require +DI / -DI Direction Alignment", value=True)
-            r_vol = st.checkbox("Volume Spike (> 20-bar avg)", value=def_vol)
-            vol_mult = st.slider("Volume Multiplier (x)", 1.0, 5.0, 1.5, step=0.1)
-
-        with st.expander("Breakout & Bollinger Squeeze", expanded=True):
-            r_brk = st.checkbox("Price Breakout (N-bar High/Low)", value=def_brk)
-            brk_per = st.selectbox("Breakout Lookback Bars", [20, 52], index=0)
-            r_sq = st.checkbox("Bollinger Band Squeeze", value=def_sq)
-            sq_pct = st.slider("Bandwidth Percentile Squeeze (≤ %)", 5, 50, 20)
-
-# ==========================================================
 # 3. RISK & SIZING TAB
 # ==========================================================
 with tab3:
