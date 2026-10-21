@@ -200,7 +200,8 @@ col_btn1, col_btn2 = st.columns([1, 4])
 with col_btn1:
     select_all_sec = st.checkbox("Select All / Deselect All", value=True)
 # নিচে সব সেক্টরের চেকবক্স এই টগলের সাথে সমন্বিত থাকবে
-          st.markdown("---")
+    
+    st.markdown("---")
     sec_cols = st.columns(5)
     selected_sectors = []
     for idx, sec in enumerate(SECTORS.keys()):
