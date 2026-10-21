@@ -200,7 +200,7 @@ col_btn1, col_btn2 = st.columns([1, 4])
 with col_btn1:
     select_all_sec = st.checkbox("Select All / Deselect All", value=True)
 # নিচে সব সেক্টরের চেকবক্স এই টগলের সাথে সমন্বিত থাকবে
-      st.markdown("---")
+          st.markdown("---")
     sec_cols = st.columns(5)
     selected_sectors = []
     for idx, sec in enumerate(SECTORS.keys()):
@@ -208,7 +208,6 @@ with col_btn1:
             if st.checkbox(sec, value=select_all_sec):
                 selected_sectors.append(sec)
                 
-    # সার্কিট ফিল্টার ডিফল্ট 0 (বন্ধ)
     circuit_candles = st.number_input(
         "Circuit-lock Check (Last X Candles)", 
         min_value=0, 
