@@ -171,76 +171,36 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 with tab1:
     st.subheader("Step 1 · Universe Selection & Base Filters")
     col1, col2, col3 = st.columns(3)
-  with tab1:
-    st.subheader("Step 1 · Universe Selection & Base Filters")
+
+# --- ১. Universe & Index Selection ---
+col_idx1, col_idx2 = st.columns(2)
+with col_idx1:
+    sel_exch = st.selectbox("Exchange", ["All", "NSE", "BSE"], index=1)
+with col_idx2:
+    sel_idx = st.selectbox("Index Bucket", ["All (All Stocks)"] + list(INDEX_BUCKETS.keys()), index=0)
+
+# --- ২. Timeframe & Lookback ---
+col_tf1, col_tf2 = st.columns(2)
+with col_tf1:
+    sel_tf = st.selectbox("Timeframe", ["Daily", "5m", "15m", "60m", "Weekly", "Monthly"], index=0)
+with col_tf2:
+    sel_period = st.selectbox("Data Lookback Period", ["1 Year", "6 Months", "3 Months", "2 Years", "All"], index=0)
+
+# --- ৩. Market Cap (Bucket + Custom Values) ---
+col_mc1, col_mc2, col_mc3 = st.columns(3)
+with col_mc1:
+    market_cap_bucket = st.selectbox("Market Cap Category", ["All", "Large Cap", "Mid Cap", "Small Cap", "Micro Cap", "Custom/None"], index=0)
+with col_mc2:
+    min_mcap = st.number_input("Min Market Cap (₹ Cr)", min_value=0.0, value=0.0, step=1000.0, help="0 রাখলে অফ থাকবে")
+with col_mc3:
+    max_mcap = st.number_input("Max Market Cap (₹ Cr)", min_value=0.0, value=500000.0, step=5000.0, help="উচ্চ সীমা নির্ধারণের জন্য")
+
+# --- ৪. Sector Selection Controls (Select All / None) ---
+col_btn1, col_btn2 = st.columns([1, 4])
+with col_btn1:
+    select_all_sec = st.checkbox("Select All / Deselect All", value=True)
+# নিচে সব সেক্টরের চেকবক্স এই টগলের সাথে সমন্বিত থাকবে
     
-    # --- Universe Selection ---
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        sel_exch = st.selectbox("Exchange", ["NSE", "BSE", "Both"], index=0)
-    with col2:
-        sel_idx = st.selectbox("Index Bucket", list(INDEX_BUCKETS.keys()), index=0)
-    with col3:
-        sel_tf = st.selectbox("Timeframe", ["Daily", "5m", "15m", "60m", "Weekly"], index=0)
-
-    st.markdown("---")
-    st.subheader("2. Liquidity & Safety Filters")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        min_price = st.number_input(
-            "Minimum Price (₹)",
-            min_value=0.0,
-            value=0.0,
-            step=5.0,
-            help="0 রাখলে কোনো স্টক বাদ পড়বে না"
-        )
-        min_volume = st.number_input(
-            "Min 20-Day Avg Volume",
-            min_value=0,
-            value=0,
-            step=10000,
-            help="0 রাখলে ভলিউম ভিত্তিক কোনো ফিল্টারিং হবে না"
-        )
-        circuit_candles = st.number_input(
-            "Circuit-lock Check (Last X Candles)",
-            min_value=0,
-            max_value=20,
-            value=0,
-            step=1,
-            help="0 রাখলে সার্কিট চেক নিষ্ক্রিয় থাকবে"
-        )
-
-    with col2:
-        max_price = st.number_input(
-            "Maximum Price (₹)",
-            min_value=0.0,
-            value=100000.0,
-            step=100.0,
-            help="ফিল্টারিং বাদ রাখতে অনেক বেশি মান রাখা হয়েছে"
-        )
-        min_turnover = st.number_input(
-            "Min 20-Day Avg Turnover (₹ Crore)",
-            min_value=0.0,
-            value=0.0,
-            step=0.1,
-            help="0 রাখলে কোনো টার্নওভার ফিল্টার প্রয়োগ হবে না"
-        )
-        exclude_asm_gsm = st.checkbox(
-            "Exclude ASM / GSM Surveillance Stocks",
-            value=False,
-            help="টিক দিলে যেসব ASM/GSM তালিকায় স্টক বাদ যাবে"
-        )
-
-    st.markdown("---")
-    st.markdown("**Sectors (Select Applicable Sectors)**")
-    sec_cols = st.columns(5)
-    selected_sectors = []
-    for idx, sec in enumerate(SECTORS.keys()):
-        with sec_cols[idx % 5]:
-            if st.checkbox(sec, value=True):
-                selected_sectors.append(sec)
-
     # সার্কিট ফিল্টার ডিফল্ট 0 (বন্ধ)
     circuit_candles = st.number_input(
         "Circuit-lock Check (Last X Candles)", 
