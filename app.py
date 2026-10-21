@@ -246,54 +246,17 @@ with col2:
 # ==========================================================
 # 2. RULES TAB
 # ==========================================================
-with tab2:
-import streamlit as st
-
-# --- Premium Custom Styling ---
-st.markdown("""
-<style>
-    /* Premium Card / Container Style */
-    .indicator-card {
-        background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 12px;
-        padding: 16px 20px;
-        margin-bottom: 16px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-        backdrop-filter: blur(8px);
-        transition: all 0.3s ease;
-    }
-    .indicator-card:hover {
-        border-color: rgba(0, 210, 255, 0.4);
-        box-shadow: 0 6px 20px rgba(0, 210, 255, 0.1);
-    }
-    
-    /* Header Badge Style */
-    .badge-title {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 1.05rem;
-        font-weight: 600;
-        color: #e0e6ed;
-        margin-bottom: 8px;
-    }
-    .badge-icon {
-        background: rgba(0, 210, 255, 0.15);
-        color: #00d2ff;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 0.85rem;
-    }
-
-    /* Inactive State Visual Dimming */
-    .disabled-block {
-        opacity: 0.4;
-        filter: grayscale(80%);
-        pointer-events: none;
-    }
-</style>
-""", unsafe_allow_html=True)
+    st.title("Step 2 • Technical Rules & Preset Engine")
+    preset_options = ["Trend Follower 🚀", "Breakout Scanner ⚡", "Pullback Entry 🎯"]
+    selected_presets = st.multiselect("Strategy Presets", options=preset_options, default=["Trend Follower 🚀"])
+    rule_logic = st.selectbox("Rule Logic", options=["Min-N-of-M", "ALL Enabled", "ANY Enabled"])
+    col_n, col_dir = st.columns(2)
+    with col_n:
+        if "Min-N-of-M" in rule_logic:
+            n_min = st.number_input("N", min_value=1, max_value=10, value=2)
+    with col_dir:
+        direction = st.selectbox("Direction", ["BOTH (Buy & Sell)", "BUY Only 🟢", "SELL Only 🔴"])
+        
 
 # 3. RISK & SIZING TAB
 # ==========================================================
