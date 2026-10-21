@@ -256,7 +256,50 @@ with col2:
             n_min = st.number_input("N", min_value=1, max_value=10, value=2)
     with col_dir:
         direction = st.selectbox("Direction", ["BOTH (Buy & Sell)", "BUY Only 🟢", "SELL Only 🔴"])
-        
+         with st.expander("📈 EMA Crossover & 200 EMA", expanded=True):
+        master_ema = st.toggle("Enable EMA Module (মাস্টার সুইচ)", value=True, key="master_ema")
+        if master_ema:
+            col1, col2 = st.columns(2)
+            with col1:
+                fast_ema = st.number_input("Fast EMA Period", min_value=1, max_value=100, value=9)
+            with col2:
+                slow_ema = st.number_input("Slow EMA Period", min_value=1, max_value=300, value=21)
+            c_200 = st.checkbox("Close vs EMA 200 (Bullish > EMA200)", value=True)
+        else:
+            st.caption("⚠️ এই মডিউলটি বন্ধ রয়েছে।")
+
+    with st.expander("📊 RSI & MACD Indicators", expanded=False):
+        master_rsi_macd = st.toggle("Enable Momentum Module (মাস্টার সুইচ)", value=True, key="master_rsi_macd")
+        if master_rsi_macd:
+            enable_rsi = st.checkbox("Enable RSI Zone Filter", value=False)
+            if enable_rsi:
+                rsi_lower = st.slider("RSI Lower Bound (Bullish)", 0, 100, 50)
+                rsi_upper = st.slider("RSI Upper Bound (Bullish)", 0, 100, 70)
+            st.divider()
+            enable_macd = st.checkbox("Enable MACD Crossover", value=True)
+        else:
+            st.caption("⚠️ Momentum ফিল্টার বন্ধ রাখা হয়েছে।")
+
+    with st.expander("🛡️ Supertrend & VWAP", expanded=False):
+        master_trend = st.toggle("Enable Trend Confirmation", value=False, key="master_trend")
+        if master_trend:
+            st.checkbox("Enable Supertrend (10, 3)", value=True)
+            st.checkbox("Session VWAP (Intraday)", value=False)
+        else:
+            st.caption("⚠️ Trend confirmation বন্ধ আছে।")
+
+    with st.expander("⚡ ADX Strength & Volume Spike", expanded=False):
+        master_volume = st.toggle("Enable Volume & Strength", value=True, key="master_volume")
+        if master_volume:
+            adx_thresh = st.slider("Min ADX Value", min_value=10, max_value=60, value=20)
+            st.checkbox("Require +DI / -DI Direction Alignment", value=True)
+            st.divider()
+            vol_spike = st.checkbox("Volume Spike (> 20-bar avg)", value=False)
+            if vol_spike:
+                st.number_input("Volume Multiplier (x)", min_value=1.0, max_value=5.0, value=1.5, step=0.1)
+        else:
+            st.caption("⚠️ Volume ও Strength অ্যানালাইসিস নিষ্ক্রিয় রয়েছে।")
+   
 
 # 3. RISK & SIZING TAB
 # ==========================================================
