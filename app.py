@@ -171,25 +171,64 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 with tab1:
     st.subheader("Step 1 · Universe Selection & Base Filters")
     col1, col2, col3 = st.columns(3)
-    with col1:
-        sel_exch = st.selectbox("Exchange", ["NSE", "BSE", "Both"], index=0)
-        sel_idx = st.selectbox("Index Bucket", list(INDEX_BUCKETS.keys()), index=1)
-    with col2:
-        sel_tf = st.selectbox("Timeframe", ["Daily", "5m", "15m", "60m", "Weekly", "Monthly"], index=0)
-        min_price = st.number_input("Minimum Price (₹)", value=50, min_value=1)
-    with col3:
-        min_vol = st.number_input("Min 20-session Avg Volume", value=100000, step=10000)
-        lock_k = st.number_input("Circuit-lock Check (Candles)", value=3, min_value=1, max_value=10)
 
-    st.markdown("---")
-    st.markdown("**Sectors (Select Applicable Sectors):**")
-    sec_cols = st.columns(5)
-    selected_sectors = []
-    for idx, sec in enumerate(SECTORS.keys()):
-        with sec_cols[idx % 5]:
-            if st.checkbox(sec, value=True):
-                selected_sectors.append(sec)
+st.subheader("2. Liquidity & Safety Filters")
 
+col1, col2 = st.columns(2)
+with col1:
+    # ডিফল্ট 0.0 রাখায় কোনো স্টক বাদ পড়বে না
+    min_price = st.number_input(
+        "Minimum Price (₹)", 
+        min_value=0.0, 
+        value=0.0, 
+        step=5.0,
+        help="0 রাখলে সব স্টক অন্তর্ভুক্ত থাকবে।"
+    )
+    
+    # ডিফল্ট 0 রাখায় সব ভলিউমের স্টক আসবে
+    min_volume = st.number_input(
+        "Min 20-Day Avg Volume", 
+        min_value=0, 
+        value=0, 
+        step=10000,
+        help="0 মানে ভলিউম ভিত্তিক কোনো ফিল্টারিং হবে না।"
+    )
+    
+    # সার্কিট ফিল্টার ডিফল্ট 0 (বন্ধ)
+    circuit_candles = st.number_input(
+        "Circuit-lock Check (Last X Candles)", 
+        min_value=0, 
+        max_value=20, 
+        value=0, 
+        step=1,
+        help="0 রাখলে সার্কিট চেক নিষ্ক্রিয় থাকবে।"
+    )
+
+with col2:
+    # সর্বোচ্চ দামের সীমা ডিফল্ট হিসেবে অনেক বেশি রাখা হলো
+    max_price = st.number_input(
+        "Maximum Price (₹)", 
+        min_value=0.0, 
+        value=100000.0, 
+        step=100.0,
+        help="ডিফল্ট মান সর্বোচ্চ রাখা হয়েছে যাতে সব দামের স্টক আসে।"
+    )
+    
+    # টার্নওভার ফিল্টার ডিফল্ট 0.0 (বন্ধ)
+    min_turnover = st.number_input(
+        "Min 20-Day Avg Turnover (₹ Crore)", 
+        min_value=0.0, 
+        value=0.0, 
+        step=1.0,
+        help="0 মানে কোনো টার্নওভার ফিল্টার প্রয়োগ হবে না।"
+    )
+    
+    # ASM/GSM এক্সক্লুশন ডিফল্ট False
+    exclude_asm_gsm = st.checkbox(
+        "Exclude ASM / GSM Surveillance Stocks", 
+        value=False,
+        help="টিক দিলে সেবির ASM/GSM তালিকার স্টক বাদ যাবে।"
+    )
 # ==========================================================
 # 2. RULES TAB
 # ==========================================================
