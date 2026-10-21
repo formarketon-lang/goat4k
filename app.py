@@ -242,21 +242,23 @@ with col2:
         "Exclude ASM / GSM Surveillance Stocks", 
         value=False,
         help="টিক দিলে সেবির ASM/GSM তালিকার স্টক বাদ যাবে।"
-    )
-# ==========================================================
+    ) 
+          # ==========================================
 # 2. RULES TAB
-# ==========================================================
+# ==========================================
+with tab2:
     st.title("Step 2 • Technical Rules & Preset Engine")
     preset_options = ["Trend Follower 🚀", "Breakout Scanner ⚡", "Pullback Entry 🎯"]
     selected_presets = st.multiselect("Strategy Presets", options=preset_options, default=["Trend Follower 🚀"])
-    rule_logic = st.selectbox("Rule Logic", options=["Min-N-of-M", "ALL Enabled", "ANY Enabled"])
+    rule_logic = st.selectbox("Rule Logic", options=["Min-N-of-M", "All Enabled", "ANY Enabled"])
     col_n, col_dir = st.columns(2)
     with col_n:
         if "Min-N-of-M" in rule_logic:
             n_min = st.number_input("N", min_value=1, max_value=10, value=2)
     with col_dir:
         direction = st.selectbox("Direction", ["BOTH (Buy & Sell)", "BUY Only 🟢", "SELL Only 🔴"])
-         with st.expander("📈 EMA Crossover & 200 EMA", expanded=True):
+
+    with st.expander("📈 EMA Crossover & 200 EMA", expanded=True):
         master_ema = st.toggle("Enable EMA Module (মাস্টার সুইচ)", value=True, key="master_ema")
         if master_ema:
             col1, col2 = st.columns(2)
@@ -299,7 +301,7 @@ with col2:
                 st.number_input("Volume Multiplier (x)", min_value=1.0, max_value=5.0, value=1.5, step=0.1)
         else:
             st.caption("⚠️ Volume ও Strength অ্যানালাইসিস নিষ্ক্রিয় রয়েছে।")
-   
+
 
 # 3. RISK & SIZING TAB
 # ==========================================================
