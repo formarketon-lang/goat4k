@@ -171,29 +171,76 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 with tab1:
     st.subheader("Step 1 · Universe Selection & Base Filters")
     col1, col2, col3 = st.columns(3)
-
-st.subheader("2. Liquidity & Safety Filters")
-
-col1, col2 = st.columns(2)
-with col1:
-    # ডিফল্ট 0.0 রাখায় কোনো স্টক বাদ পড়বে না
-    min_price = st.number_input(
-        "Minimum Price (₹)", 
-        min_value=0.0, 
-        value=0.0, 
-        step=5.0,
-        help="0 রাখলে সব স্টক অন্তর্ভুক্ত থাকবে।"
-    )
+  with tab1:
+    st.subheader("Step 1 · Universe Selection & Base Filters")
     
-    # ডিফল্ট 0 রাখায় সব ভলিউমের স্টক আসবে
-    min_volume = st.number_input(
-        "Min 20-Day Avg Volume", 
-        min_value=0, 
-        value=0, 
-        step=10000,
-        help="0 মানে ভলিউম ভিত্তিক কোনো ফিল্টারিং হবে না।"
-    )
+    # --- Universe Selection ---
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        sel_exch = st.selectbox("Exchange", ["NSE", "BSE", "Both"], index=0)
+    with col2:
+        sel_idx = st.selectbox("Index Bucket", list(INDEX_BUCKETS.keys()), index=0)
+    with col3:
+        sel_tf = st.selectbox("Timeframe", ["Daily", "5m", "15m", "60m", "Weekly"], index=0)
+
+    st.markdown("---")
+    st.subheader("2. Liquidity & Safety Filters")
     
+    col1, col2 = st.columns(2)
+    with col1:
+        min_price = st.number_input(
+            "Minimum Price (₹)",
+            min_value=0.0,
+            value=0.0,
+            step=5.0,
+            help="0 রাখলে কোনো স্টক বাদ পড়বে না"
+        )
+        min_volume = st.number_input(
+            "Min 20-Day Avg Volume",
+            min_value=0,
+            value=0,
+            step=10000,
+            help="0 রাখলে ভলিউম ভিত্তিক কোনো ফিল্টারিং হবে না"
+        )
+        circuit_candles = st.number_input(
+            "Circuit-lock Check (Last X Candles)",
+            min_value=0,
+            max_value=20,
+            value=0,
+            step=1,
+            help="0 রাখলে সার্কিট চেক নিষ্ক্রিয় থাকবে"
+        )
+
+    with col2:
+        max_price = st.number_input(
+            "Maximum Price (₹)",
+            min_value=0.0,
+            value=100000.0,
+            step=100.0,
+            help="ফিল্টারিং বাদ রাখতে অনেক বেশি মান রাখা হয়েছে"
+        )
+        min_turnover = st.number_input(
+            "Min 20-Day Avg Turnover (₹ Crore)",
+            min_value=0.0,
+            value=0.0,
+            step=0.1,
+            help="0 রাখলে কোনো টার্নওভার ফিল্টার প্রয়োগ হবে না"
+        )
+        exclude_asm_gsm = st.checkbox(
+            "Exclude ASM / GSM Surveillance Stocks",
+            value=False,
+            help="টিক দিলে যেসব ASM/GSM তালিকায় স্টক বাদ যাবে"
+        )
+
+    st.markdown("---")
+    st.markdown("**Sectors (Select Applicable Sectors)**")
+    sec_cols = st.columns(5)
+    selected_sectors = []
+    for idx, sec in enumerate(SECTORS.keys()):
+        with sec_cols[idx % 5]:
+            if st.checkbox(sec, value=True):
+                selected_sectors.append(sec)
+
     # সার্কিট ফিল্টার ডিফল্ট 0 (বন্ধ)
     circuit_candles = st.number_input(
         "Circuit-lock Check (Last X Candles)", 
